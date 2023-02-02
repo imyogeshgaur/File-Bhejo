@@ -11,11 +11,11 @@ const authorization = (req: Request, res: Response, next: NextFunction) => {
         if (verify) {
             next()
         } else {
-            return res.status(400).send("Not Authorized !!!")
+            return res.status(400).send({ message: "Not Authorized !!!" })
         }
     } catch (error) {
         console.log("Auth MiddleWare Error : ", error)
-        return res.status(400).send("Not Authorized !!!")
+        return res.status(400).send({ message: "Not Authorized !!!" })
     }
 }
 

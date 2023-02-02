@@ -1,36 +1,24 @@
 import prisma from "../database/database.config";
 import jwt from 'jsonwebtoken';
-import { resolve, join } from "path"
+import { resolve } from "path"
 import { config } from "dotenv";
 config({ path: resolve("./.env") })
 import decodeUser from "../helpers/decodeUser.helper";
-import * as fs from "fs"
 import { mailToVerify } from "../helpers/mail.helper";
+import bcryptjs from "bcryptjs"
 
 class UserService {
     private User: any;
     constructor() {
         this.User = prisma.user;
     }
-    async getListOfUsers() {
-        try {
-            const users = await this.User.findMany();
-            if (users.length === 0) {
-                return 0;
-            } else {
-                return users;
-            }
-        } catch (error) {
-            console.log("User's Service : Internal Server Error !!!", error)
-        }
-    }
 
-    async getASingleUser(id: string) {
+    async getASingleUser(userId: string) {
         try {
-            if (id.length <= 40) {
+            if (userId.length <= 40) {
                 const user = await this.User.findFirst({
                     where: {
-                        userId: id
+                        userId
                     }
                 })
                 if (user) {
@@ -39,7 +27,7 @@ class UserService {
                     return 0;
                 }
             } else {
-                const userRet = await decodeUser(id);
+                const userRet = await decodeUser(userId);
                 const user = await this.User.findFirst({
                     where: {
                         userId: userRet?.userId
@@ -57,7 +45,7 @@ class UserService {
     }
 
     async updateUser(id: string, userData: any) {
-        const { firstName, middleName, lastName, phone, file } = userData
+        const { email, name } = userData
         try {
             const user = await this.User.findFirst({
                 where: {
@@ -65,57 +53,16 @@ class UserService {
                 }
             })
             if (user) {
-                if (file.substring(34) !== undefined) {
-                    if (
-                        user.userImage === null
-                        ||
-                        user.userImage.substring(34) === undefined
-                    ) {
-                        const updateUser = await this.User.update({
-                            where: {
-                                userId: id
-                            },
-                            data: {
-                                phone,
-                                firstName,
-                                middleName,
-                                lastName,
-                                userImage: file
-                            }
-                        })
-                        return updateUser
-                    } else {
-                        const imagePath = join(process.cwd(), `/src/uploads/Users/${user.userImage.substring(34)}`)
-                        fs.unlinkSync(imagePath);
-                        const updateUser = await this.User.update({
-                            where: {
-                                userId: id
-                            },
-                            data: {
-                                phone,
-                                firstName,
-                                middleName,
-                                lastName,
-                                userImage: file
-                            }
-                        })
-                        return updateUser;
+                const updateUser = await this.User.update({
+                    where: {
+                        userId: id
+                    },
+                    data: {
+                        email,
+                        name
                     }
-                }
-                else {
-                    const updateUser = await this.User.update({
-                        where: {
-                            userId: id
-                        },
-                        data: {
-                            phone,
-                            firstName,
-                            middleName,
-                            lastName,
-                        }
-                    })
-                    return updateUser;
-                }
+                })
+                return updateUser
             } else {
                 return 0;
             }
@@ -170,7 +117,7 @@ class UserService {
                 return user
             }
         } catch (error) {
-            console.log("User's Service : Internal Server Error !!!", error)
+            console.log("Auth's Service : Internal Server Error !!!", error)
         }
     }
 
@@ -178,7 +125,6 @@ class UserService {
         try {
             const enteredEmail = userData.email;
             const email = enteredEmail.toLowerCase();
-            const password = userData.password;
             const user = await this.User.findFirst({
                 where: {
                     email
@@ -192,10 +138,65 @@ class UserService {
                 return 0;
             }
         } catch (error) {
-            console.log("User's Service : Internal Server Error !!!", error)
+            console.log("Auth's Service : Internal Server Error !!!", error)
         }
     }
 
+    async verifyUser(userId: string) {
+        try {
+            const userToFind = await this.User.findFirst({
+                where: {
+                    userId
+                }
+            });
+            return userToFind
+        } catch (error) {
+            console.log("Auth's Service : Internal Server Error !!!", error)
+        }
+    }
+
+    //? File Upload Service 
+
+    async uploadFile(data: any, userId: string) {
+        const { file, filePassword } = data
+        try {
+            const user = await this.User.findFirst({
+                where: {
+                    userId
+                }
+            })
+            if (user) {
+                if (filePassword) {
+                    const newPassword = await bcryptjs.hash(filePassword, 12);
+                    const fileCreated = await this.User.update({
+                        where: {
+                            userId
+                        },
+                        data: {
+                            file,
+                            filePassword: newPassword
+                        }
+                    })
+                    return fileCreated;
+                }else{
+                    const fileCreated = await this.User.update({
+                        where: {
+                            userId
+                        },
+                        data: {
+                            file
+                        }
+                    })
+                    return fileCreated; 
+                }
+            } else {
+                return 0;
+            }
+
+        } catch (error) {
+            console.log("File's Service : Internal Server Error !!!", error)
+        }
+    }
 }
 
 export default UserService

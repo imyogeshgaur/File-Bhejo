@@ -1,7 +1,7 @@
 import prisma from "../database/database.config";
 import jwt from "jsonwebtoken";
 
-const decodeUser = async (token: string) => {
+const decodeUsers = async(token:any) => {
     const User = prisma.user;
     const decodeVal: any = jwt.decode(token, { complete: true })
     const decodedUser = await User.findFirst({
@@ -12,4 +12,4 @@ const decodeUser = async (token: string) => {
     return decodedUser;
 }
 
-export default decodeUser;
+export default decodeUsers;

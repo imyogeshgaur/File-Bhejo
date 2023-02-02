@@ -1,19 +1,11 @@
 import { Request, Response, Router } from "express"
 import UserController from "../controllers/user.controller";
 import authorization from "../middleware/authorization.middleware";
-import { uploadUser } from "../middleware/uploads.middleware";
+import { uploadPdf } from "../middleware/uploads.middleware";
 const userRouter = Router();
 
-userRouter.get("/list", authorization, async (req: Request, res: Response) => {
-    try {
-        const userController = new UserController(req, res);
-        await userController.getListOfUsers();
-    } catch (error) {
-        console.log("Global User Error !!!", error)
-    }
-})
 
-userRouter.get("/:id", authorization, async (req: Request, res: Response) => {
+userRouter.get("/get/:id", authorization, async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.getASingleUser();
@@ -22,7 +14,7 @@ userRouter.get("/:id", authorization, async (req: Request, res: Response) => {
     }
 })
 
-userRouter.put("/update/:id",[authorization,uploadUser], async (req: Request, res: Response) => {
+userRouter.put("/update/:id", authorization, async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.updateUser();
@@ -47,7 +39,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
         const userController = new UserController(req, res);
         await userController.signUpUser();
     } catch (error) {
-        console.log("Global User Error !!!", error)
+        console.log("Global Auth Error !!!", error)
     }
 })
 
@@ -56,7 +48,27 @@ userRouter.post("/login", async (req: Request, res: Response) => {
         const userController = new UserController(req, res);
         await userController.loginUser();
     } catch (error) {
-        console.log("Global User Error !!!", error)
+        console.log("Global Auth Error !!!", error)
+    }
+})
+
+userRouter.get("/verify", async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController(req, res);
+        await userController.verifyUser();
+    } catch (error) {
+        console.log("Global Auth Error !!!", error)
+    }
+})
+
+//? File Routes 
+
+userRouter.post("/uploadFile",[authorization,uploadPdf], async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController(req, res);
+        await userController.uploadFile();
+    } catch (error) {
+        console.log("Global File Error !!!", error)
     }
 })
 

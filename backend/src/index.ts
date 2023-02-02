@@ -13,7 +13,7 @@ app.use(cors({
     origin: process.env.CORS_URL as string
 }))
 
-app.use("/static/user", express.static(path.join(process.cwd(), "/src/uploads/Users")))
+app.use("/static/pdf", express.static(path.join(process.cwd(), "/src/uploads")))
 
 app.use("/user", userRouter)
 

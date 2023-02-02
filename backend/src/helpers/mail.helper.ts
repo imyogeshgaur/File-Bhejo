@@ -26,7 +26,7 @@ const mailToVerify = async (token: any, name: string, email: string) => {
                 <p> Dear ${name}, </p>   
                 <p>Thank You for Registeration 
                 <br>
-                <a href="http://${process.env.BASE_URL}/auth/verify?token=${token}">
+                <a href="http://${process.env.BASE_URL}/user/verify?token=${token}">
                 Click Here</a> to Login !!!</p>
                 Thanks and Regards
                 <br>
