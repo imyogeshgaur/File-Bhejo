@@ -113,7 +113,7 @@ class UserController {
                     const message = await mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
                     return this.res.status(201).send({ message });
                 } else {
-                    const link = process.env.POST_PDF_URL as string + "?passReq=true"
+                    const link = `http://${process.env.BASE_URL}/user/pdf/?passReq=true`
                     const message = await mailToSendPdfLink(link, fileData.name, fileData.email);
                     return this.res.status(201).send({ message });
                 }
