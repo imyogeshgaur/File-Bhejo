@@ -1,14 +1,13 @@
 import { lazy } from "react";
-import Authentication from "./common/Authentication";
-import Home from "./common/Home";
-import PasswordRoute from "./common/PasswordRoute";
-const token = localStorage.getItem("jwt")
-console.log(token)
+
+const Authentication = lazy(()=>import("./common/Authentication"))
+const Home = lazy(()=>import("./common/Home"))
+const PasswordRoute = lazy(()=>import("./common/PasswordRoute"))
+
 const allRoutes = [
     { path:"/", element:<Authentication />},
     { path:`/user/verify`, element:<Home />},
     { path:"/user/pdf", element:<PasswordRoute />}
-
 ]
 
 export default allRoutes;
