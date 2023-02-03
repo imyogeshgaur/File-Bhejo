@@ -2,7 +2,7 @@
 
 File Bhejo is an application in which we can share the files with the other users securely and easily. 
 In this application I have included **Passsword Less Authentication** and this application is built on 
-Nodejs and react js and uses typescript as a wrapper and MySQL as database to make it type safe and secure. 
+Nodejs and react js and uses typescript as a wrapper and MySQL as database with prisma as ORM (Object Relation Mapping)to make it type safe and secure. 
 This application help the user to share the password protected files to other user dirrectly over their email address.
 
 In future I also try to implement SMS service as well for users not having smartphones.
