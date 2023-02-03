@@ -13,7 +13,9 @@ In future I also try to implement SMS service as well for users not having smart
 
 ## Working of Project
 
-Step 1 : Create a .env file inside backend folder of the Project having following credentials 
+Step 1 : Create an uploads Folder inside the backend folder 
+
+Step 2 : Create a .env file inside backend folder of the Project having following credentials 
 
 ```
   
@@ -27,13 +29,13 @@ Step 1 : Create a .env file inside backend folder of the Project having followin
   MAIL_PASSWORD = OUTLOOK_MAIL_pASSWORD
 ```
 
-Step 2 : Run the following command to add packages inside both backend and frontend folder
+Step 3 : Run the following command to add packages inside both backend and frontend folder
 
 ```
   npm i
 ```
 
-Step 3 : Run the following command to Run application packages inside both backend and frontend folder
+Step 4 : Run the following command to Run application packages inside both backend and frontend folder
 
 ```
   npm start
