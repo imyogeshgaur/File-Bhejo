@@ -26,7 +26,7 @@ const mailToVerify = async (token: any, name: string, email: string) => {
                 <p> Dear ${name}, </p>   
                 <p>Thank You for Registeration 
                 <br>
-                <a href="http://${process.env.BASE_URL}/user/verify?token=${token}">
+                <a href="http://${process.env.BASE_URL}/user/verify">
                 Click Here</a> to Login !!!</p>
                 Thanks and Regards
                 <br>
@@ -36,7 +36,7 @@ const mailToVerify = async (token: any, name: string, email: string) => {
             `
         })
         console.log("Mail Send Successfully !!!", info.messageId)
-        return "Check Mail For Login !!!";
+        return { message: "Check Mail For Login !!!", value: token };
     } catch (error) {
         console.log("Verification Mail Error : ", error)
     }
@@ -67,8 +67,37 @@ const mailToSendPdfLink = async (link: string, name: string, email: string) => {
         console.log("Mail Send Successfully !!!", info.messageId)
         return "Check Mail For Pdf Link !!!";
     } catch (error) {
-
+        console.log("Pdf Link Mail Error : ", error)
     }
 }
 
-export { mailToVerify, mailToSendPdfLink };
+const passwordProviderLink = async(link: string, name: string, email: string, password:string)=>{
+    try {
+        const info = await myTransport.sendMail({
+            from: process.env.SENDER_MAIL,
+            to: email,
+            subject: "Get Your PDF",
+            html: `
+                <html>
+                <head>
+                </head>
+                <body>
+                    <p>Dear ${name}, </p>    
+                    <p>Your Password To Access Pdf is : ${password}</p>
+                    <a href=${link}>
+                    Click Here</a> to Download Pdf !!!</p>
+                    Thanks and Regards
+                    <br>
+                    Team Yogesh Gaur
+                </body>
+                </html>
+                `
+        })
+        console.log("Mail Send Successfully !!!", info.messageId)
+        return "Check Mail For Pdf Link !!!";
+    } catch (error) {
+        console.log("Pdf Password Mail Error : ", error)
+    }
+}
+
+export { mailToVerify, mailToSendPdfLink,passwordProviderLink };

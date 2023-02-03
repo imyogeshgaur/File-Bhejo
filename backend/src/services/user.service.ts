@@ -165,6 +165,7 @@ class UserService {
                     userId
                 }
             })
+            const previousFile = user.file;
             if (user) {
                 if (filePassword) {
                     const newPassword = await bcryptjs.hash(filePassword, 12);
@@ -178,7 +179,7 @@ class UserService {
                         }
                     })
                     return fileCreated;
-                }else{
+                } else {
                     const fileCreated = await this.User.update({
                         where: {
                             userId
@@ -187,7 +188,7 @@ class UserService {
                             file
                         }
                     })
-                    return fileCreated; 
+                    return fileCreated;
                 }
             } else {
                 return 0;

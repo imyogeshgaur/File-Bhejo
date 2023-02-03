@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 dotenv.config({ path: path.resolve("./.env") })
 import UserService from "../services/user.service";
 import decodeUsers from "../helpers/decodeUser.helper";
-import { mailToSendPdfLink } from "../helpers/mail.helper";
+import { mailToSendPdfLink, passwordProviderLink } from "../helpers/mail.helper";
+import bcryptjs from "bcryptjs"
 
 class UserController {
     private req: Request;
@@ -67,7 +68,7 @@ class UserController {
             if (user === 0) {
                 return this.res.status(200).send({ message: "User Already Exist !!!" });
             } else {
-                return this.res.status(200).send(user);
+                return this.res.status(200).send({ message: "Welcome To Our Platform !!!", value: user });
             }
         } catch (error) {
             console.log("Auth's Controller : Internal Server Error !!!", error)
@@ -81,7 +82,7 @@ class UserController {
             if (message === 0) {
                 return this.res.status(200).send({ message: "Invalid Credentials !!!" });
             } else {
-                return this.res.status(200).send({ message });
+                return this.res.status(200).send(message);
             }
         } catch (error) {
             console.log("Auth's Controller : Internal Server Error !!!", error)
@@ -114,11 +115,27 @@ class UserController {
                     return this.res.status(201).send({ message });
                 } else {
                     const link = `http://${process.env.BASE_URL}/user/pdf/?passReq=true`
-                    const message = await mailToSendPdfLink(link, fileData.name, fileData.email);
+                    const message = await passwordProviderLink(link, fileData.name, fileData.email,filePassword);
                     return this.res.status(201).send({ message });
                 }
             } else {
                 return this.res.status(201).send({ message: "File Not Uploaded !!!" })
+            }
+        } catch (error) {
+            console.log("File's Controller : Internal Server Error !!!", error)
+        }
+    }
+    async sendFile() {
+        try {
+            const token = this.req.headers.authorization;
+            const filePassword = this.req.headers.password as string;
+            const fileData = await this.service.getASingleUser(token as string);
+            const match = await bcryptjs.compare(filePassword, fileData.filePassword)
+            if (match) {
+                const message = await mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
+                return this.res.status(201).send({ message });
+            } else {
+                return this.res.status(200).send({ message: "Passwsord Do not Match !!!" })
             }
         } catch (error) {
             console.log("File's Controller : Internal Server Error !!!", error)

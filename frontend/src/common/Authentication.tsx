@@ -15,13 +15,6 @@ const Authentication = () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin")
   }
 
-  useEffect(() => {
-    if (token) {
-      navigate(`/user/verify`)
-    }
-  }, [])
-
-
   const signUpApiCall = async () => {
     try {
       const res = await fetch("http://localhost:4000/user/signup", {

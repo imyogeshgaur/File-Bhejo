@@ -72,4 +72,13 @@ userRouter.post("/uploadFile",[authorization,uploadPdf], async (req: Request, re
     }
 })
 
+userRouter.post("/filePass",async(req:Request,res:Response)=>{
+    try {
+        const userController = new UserController(req, res);
+        await userController.sendFile();
+    } catch (error) {
+        console.log("Global File Error !!!", error)
+    }
+})
+
 export default userRouter;
