@@ -1,12 +1,17 @@
-import {FiLogOut} from 'react-icons/fi';
-import {useNavigate} from 'react-router-dom';
+import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { MdAddToPhotos } from "react-icons/md";
 
 const NavBar = (props: any) => {
   const navigate = useNavigate();
-  const logoutUser = () =>{
-    localStorage.removeItem("jwt")
-    navigate("/")
-  }
+  const logoutUser = () => {
+    localStorage.removeItem("jwt");
+    navigate("/");
+  };
+
+  const addFiles = () => {
+    navigate("/file/merge");
+  };
   return (
     <nav className="navbar navbar-expand-lg bg-danger">
       <div className="container-fluid">
@@ -35,14 +40,29 @@ const NavBar = (props: any) => {
           </ul>
           <ul className="navbar-nav mb-2 mb-lg-0">
             <li className="nav-item">
-              {props.name ? (
-                <div className="navbar-brand text-white" onClick={logoutUser}>
-                  <FiLogOut color={"white"} size={28} />
-                </div>
+              {props.name && location.pathname === "/user/verify" ? (
+                <>
+                  <div className="navbar-brand text-white">
+                    <MdAddToPhotos
+                      color={"white"}
+                      size={28}
+                      className="me-3"
+                      onClick={addFiles}
+                    />
+                    <FiLogOut color={"white"} size={28} onClick={logoutUser} />
+                  </div>
+                </>
               ) : (
-                <div className="navbar-brand text-white">
-                
-                </div>
+                <>
+                  <div className="navbar-brand text-white">
+                    <FiLogOut color={"white"} size={28} onClick={logoutUser} />
+                  </div>
+                </>
+              )}
+              {props.name === undefined ? (
+                <div className="navbar-brand text-white"></div>
+              ) : (
+                ""
               )}
             </li>
           </ul>

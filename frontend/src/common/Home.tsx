@@ -7,9 +7,9 @@ import NavBar from "../assets/NavBar";
 const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
-  const [name, setname] = useState<string>("");
-  const [file, setfile] = useState<any>("");
-  const [password, setpassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [file, setFile] = useState<any>("");
+  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     if (token) {
@@ -18,7 +18,7 @@ const Home = () => {
         method: "GET",
       })
         .then((res) => res.json())
-        .then((data) => setname(data.name))
+        .then((data) => setName(data.name))
         .catch((err) => console.log(err));
     } else {
       navigate("/");
@@ -75,7 +75,7 @@ const Home = () => {
               title="Select file To Share"
               onChange={(e) => {
                 if (!e.target.files) return;
-                setfile(e.target.files[0]);
+                setFile(e.target.files[0]);
               }}
             />
           </div>
@@ -86,7 +86,7 @@ const Home = () => {
               className="form-control mt-1"
               placeholder="Enter password"
               value={password}
-              onChange={(e) => setpassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="d-grid gap-2 my-3">
