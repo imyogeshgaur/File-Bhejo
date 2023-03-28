@@ -62,12 +62,12 @@ const MergeFile = () => {
             closeButton: false,
             style: {
               color: "red",
-              backgroundColor: "rgb(255, 206, 206)"
-            }
-          })
+              backgroundColor: "rgb(255, 206, 206)",
+            },
+          });
           if (a == 1) {
             setTimeout(() => {
-              window.location.reload()
+              window.location.reload();
             }, 2000);
           }
         }
@@ -77,27 +77,26 @@ const MergeFile = () => {
     }
   };
 
-
-  const downloadPdf = async()=>{
-      try {
-          const a = toast.success("File Downloading Started !!!", {
-            position: toast.POSITION.TOP_CENTER,
-            closeOnClick: false,
-            closeButton: false,
-            style: {
-              color: "green",
-              backgroundColor: "rgb(183, 248, 183)",
-            },
-          });
-          if (a == 1) {
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
-          }
-      } catch (error) {
-        console.log(error);
+  const downloadPdf = async () => {
+    try {
+      const a = toast.success("File Downloading Started !!!", {
+        position: toast.POSITION.TOP_CENTER,
+        closeOnClick: false,
+        closeButton: false,
+        style: {
+          color: "green",
+          backgroundColor: "rgb(183, 248, 183)",
+        },
+      });
+      if (a == 1) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <NavBar name={name} />
@@ -118,19 +117,21 @@ const MergeFile = () => {
             />
           </div>
           <div className="flex my-3">
-          <button
-            className="btn btn-primary mx-auto"
-            onClick={mergePdf}
-          >
-            Merge Files
-          </button>
-          <a
-            className="btn btn-success mx-5"
-            onClick={downloadPdf}
-            href={"http://localhost:4000/user/downloadFile"}
-          >
-            Download Merged File
-          </a>
+            <button
+              className="btn btn-primary mx-auto w-100"
+              onClick={mergePdf}
+            >
+              Merge Files
+            </button>
+          </div>
+          <div className="flex mb-3">
+            <a
+              className="btn btn-success w-100"
+              onClick={downloadPdf}
+              href={"http://localhost:4000/user/downloadFile"}
+            >
+              Download Merged File
+            </a>
           </div>
         </div>
       </div>
