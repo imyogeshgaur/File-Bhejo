@@ -13,5 +13,15 @@ const tempPdfStorage = multer.diskStorage({
         callback(null, uuidv4() + Date.now() + path.extname(file.originalname))
     }
 });
+const tempMultiPdfStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        const pathToFolder = path.resolve(process.env.MERGE_PDF_STORAGE as string)
+        callback(null, pathToFolder);
+    },
+    filename: function (req, file, callback) {
+        callback(null, uuidv4() + Date.now() + path.extname(file.originalname))
+    }
+});
 
 export const uploadPdf = multer({ storage: tempPdfStorage }).single("pdf");
+export const uploadMultiplePdf = multer({ storage: tempMultiPdfStorage }).array("pdf");

@@ -6,6 +6,10 @@ import UserService from "../services/user.service";
 import decodeUsers from "../helpers/decodeUser.helper";
 import { mailToSendPdfLink, passwordProviderLink } from "../helpers/mail.helper";
 import bcryptjs from "bcryptjs"
+import { join } from "path";
+import { readdir, unlinkSync } from "fs";
+
+
 
 class UserController {
     private req: Request;
@@ -115,7 +119,7 @@ class UserController {
                     return this.res.status(201).send({ message });
                 } else {
                     const link = `http://${process.env.BASE_URL}/user/pdf/?passReq=true`
-                    const message = await passwordProviderLink(link, fileData.name, fileData.email,filePassword);
+                    const message = await passwordProviderLink(link, fileData.name, fileData.email, filePassword);
                     return this.res.status(201).send({ message });
                 }
             } else {
@@ -139,6 +143,34 @@ class UserController {
             }
         } catch (error) {
             console.log("File's Controller : Internal Server Error !!!", error)
+        }
+    }
+
+    async mergeFiles() {
+        try {
+            const files = this.req.files;
+            const response = await this.service.mergeFiles(files);
+            if (response) {
+                return this.res.status(200).send({ message: response });
+            } else {
+                return this.res.status(200).send({ message: "Files Not Merged !!!" })
+            }
+        } catch (error) {
+            console.log("File's Controller : Internal Server Error !!!")
+        }
+    }
+
+    async downloadFile() {
+        try {
+            this.res.status(200).download(join(process.cwd() + "/src/uploads/merged/") + "merged.pdf")
+            readdir(join(process.cwd() + "/src/uploads/merged"), (err, files) => {
+                if (err) throw err;
+                for (const file of files) {
+                    unlinkSync(join(process.cwd() + "/src/uploads/merged/") + file);
+                }
+            })
+        } catch (error) {
+            console.log("File's Controller : Internal Server Error !!!")
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express"
 import UserController from "../controllers/user.controller";
 import authorization from "../middleware/authorization.middleware";
-import { uploadPdf } from "../middleware/uploads.middleware";
+import { uploadMultiplePdf, uploadPdf } from "../middleware/uploads.middleware";
 const userRouter = Router();
 
 
@@ -63,7 +63,7 @@ userRouter.get("/verify", async (req: Request, res: Response) => {
 
 //? File Routes 
 
-userRouter.post("/uploadFile",[authorization,uploadPdf], async (req: Request, res: Response) => {
+userRouter.post("/uploadFile", [authorization, uploadPdf], async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.uploadFile();
@@ -72,7 +72,7 @@ userRouter.post("/uploadFile",[authorization,uploadPdf], async (req: Request, re
     }
 })
 
-userRouter.post("/filePass",async(req:Request,res:Response)=>{
+userRouter.post("/filePass", async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.sendFile();
@@ -81,4 +81,21 @@ userRouter.post("/filePass",async(req:Request,res:Response)=>{
     }
 })
 
+userRouter.post("/mergeFiles", [authorization, uploadMultiplePdf], async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController(req, res);
+        await userController.mergeFiles();
+    } catch (error) {
+        console.log("Global File Error !!!", error)
+    }
+})
+
+userRouter.get("/downloadFile", async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController(req, res);
+        await userController.downloadFile();
+    } catch (error) {
+        console.log("Global File Error !!!", error)
+    }
+})
 export default userRouter;

@@ -6,6 +6,8 @@ config({ path: resolve("./.env") })
 import decodeUser from "../helpers/decodeUser.helper";
 import { mailToVerify } from "../helpers/mail.helper";
 import bcryptjs from "bcryptjs"
+import PDFMerger from 'pdf-merger-js';
+import mergePDFs from "../helpers/mergePdf.helper";
 
 class UserService {
     private User: any;
@@ -196,6 +198,14 @@ class UserService {
 
         } catch (error) {
             console.log("File's Service : Internal Server Error !!!", error)
+        }
+    }
+
+    async mergeFiles(files:any){
+        try {
+           return await mergePDFs(files);
+        } catch (error) {
+            console.log("File's Service : Internal Server Error !!!", error);
         }
     }
 }

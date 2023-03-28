@@ -1,6 +1,5 @@
 import NavBar from "../assets/NavBar";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 
 const PasswordRoute = () => {
