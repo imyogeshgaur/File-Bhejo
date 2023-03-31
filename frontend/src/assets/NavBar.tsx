@@ -40,29 +40,28 @@ const NavBar = (props: any) => {
           </ul>
           <ul className="navbar-nav mb-2 mb-lg-0">
             <li className="nav-item">
-              {props.name && location.pathname === "/user/verify" ? (
+              {props.name ? (
                 <>
                   <div className="navbar-brand text-white">
-                    <MdAddToPhotos
-                      color={"white"}
-                      size={28}
-                      className="me-3"
-                      onClick={addFiles}
-                    />
-                    <FiLogOut color={"white"} size={28} onClick={logoutUser} />
+                    {location.pathname === "/user/verify" ? (
+                      <>
+                        <MdAddToPhotos
+                          color={"white"}
+                          size={28}
+                          className="me-3"
+                          onClick={addFiles}
+                        />
+                         <FiLogOut color={"white"} size={28} onClick={logoutUser} />
+                      </>
+                    ) : (
+                      <>
+                         <FiLogOut color={"white"} size={28} onClick={logoutUser} />
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
-                <>
-                  <div className="navbar-brand text-white">
-                    <FiLogOut color={"white"} size={28} onClick={logoutUser} />
-                  </div>
-                </>
-              )}
-              {props.name === undefined ? (
-                <div className="navbar-brand text-white"></div>
-              ) : (
-                ""
+                <></>
               )}
             </li>
           </ul>
