@@ -3,11 +3,10 @@ import jwt from 'jsonwebtoken';
 import { resolve } from "path"
 import { config } from "dotenv";
 config({ path: resolve("./.env") })
-import decodeUser from "../helpers/decodeUser.helper";
-import { mailToVerify } from "../helpers/mail.helper";
+import Helper from "../helpers/Helper";
 import bcryptjs from "bcryptjs"
 import PDFMerger from 'pdf-merger-js';
-import mergePDFs from "../helpers/mergePdf.helper";
+
 
 class UserService {
     private User: any;
@@ -29,7 +28,7 @@ class UserService {
                     return 0;
                 }
             } else {
-                const userRet = await decodeUser(userId);
+                const userRet = await Helper.decodeUsers(userId);
                 const user = await this.User.findFirst({
                     where: {
                         userId: userRet?.userId
@@ -134,7 +133,7 @@ class UserService {
             })
             if (user) {
                 const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET as string)
-                const message = await mailToVerify(token, user.name, email);
+                const message = await Helper.mailToVerify(token, user.name, email);
                 return message
             } else {
                 return 0;
@@ -167,7 +166,6 @@ class UserService {
                     userId
                 }
             })
-            const previousFile = user.file;
             if (user) {
                 if (filePassword) {
                     const newPassword = await bcryptjs.hash(filePassword, 12);
@@ -203,7 +201,7 @@ class UserService {
 
     async mergeFiles(files:any){
         try {
-           return await mergePDFs(files);
+           return await Helper.mergePDFs(files);
         } catch (error) {
             console.log("File's Service : Internal Server Error !!!", error);
         }

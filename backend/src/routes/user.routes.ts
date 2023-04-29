@@ -1,11 +1,10 @@
 import { Request, Response, Router } from "express"
 import UserController from "../controllers/user.controller";
-import authorization from "../middleware/authorization.middleware";
-import { uploadMultiplePdf, uploadPdf } from "../middleware/uploads.middleware";
+import MiddleWare from "../middleware/Middleware";
 const userRouter = Router();
 
 
-userRouter.get("/get/:id", authorization, async (req: Request, res: Response) => {
+userRouter.get("/get/:id", MiddleWare.authorization, async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.getASingleUser();
@@ -14,7 +13,7 @@ userRouter.get("/get/:id", authorization, async (req: Request, res: Response) =>
     }
 })
 
-userRouter.put("/update/:id", authorization, async (req: Request, res: Response) => {
+userRouter.put("/update/:id", MiddleWare.authorization, async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.updateUser();
@@ -23,7 +22,7 @@ userRouter.put("/update/:id", authorization, async (req: Request, res: Response)
     }
 })
 
-userRouter.delete("/delete/:id", authorization, async (req: Request, res: Response) => {
+userRouter.delete("/delete/:id", MiddleWare.authorization, async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.deleteUser();
@@ -63,7 +62,7 @@ userRouter.get("/verify", async (req: Request, res: Response) => {
 
 //? File Routes 
 
-userRouter.post("/uploadFile", [authorization, uploadPdf], async (req: Request, res: Response) => {
+userRouter.post("/uploadFile", [MiddleWare.authorization, MiddleWare.uploadPdf], async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.uploadFile();
@@ -81,7 +80,7 @@ userRouter.post("/filePass", async (req: Request, res: Response) => {
     }
 })
 
-userRouter.post("/mergeFiles", [authorization, uploadMultiplePdf], async (req: Request, res: Response) => {
+userRouter.post("/mergeFiles", [MiddleWare.authorization, MiddleWare.uploadMultiplePdf], async (req: Request, res: Response) => {
     try {
         const userController = new UserController(req, res);
         await userController.mergeFiles();

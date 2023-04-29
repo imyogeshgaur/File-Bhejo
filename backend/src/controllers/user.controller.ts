@@ -3,8 +3,7 @@ import * as path from "path"
 import dotenv from "dotenv";
 dotenv.config({ path: path.resolve("./.env") })
 import UserService from "../services/user.service";
-import decodeUsers from "../helpers/decodeUser.helper";
-import { mailToSendPdfLink, passwordProviderLink } from "../helpers/mail.helper";
+import Helper from "../helpers/Helper";
 import bcryptjs from "bcryptjs"
 import { join } from "path";
 import { readdir, unlinkSync } from "fs";
@@ -96,7 +95,7 @@ class UserController {
     async verifyUser() {
         try {
             const token = this.req.query.token;
-            const decodeUser: any = await decodeUsers(token);
+            const decodeUser: any = await Helper.decodeUsers(token);
             const user = await this.service.verifyUser(decodeUser.userId);
             return this.res.status(200).send(user);
         } catch (error) {
@@ -108,18 +107,18 @@ class UserController {
     async uploadFile() {
         try {
             const token = this.req.headers.authorization;
-            const decodeUser: any = await decodeUsers(token);
+            const decodeUser: any = await Helper.decodeUsers(token);
             const file = process.env.POST_PDF_URL as string + this.req.file?.filename;
             const filePassword = this.req.body.filePassword;
             const data = { file, filePassword }
             const fileData = await this.service.uploadFile(data, decodeUser.userId);
             if (fileData) {
                 if (fileData.filePassword === null) {
-                    const message = await mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
+                    const message = await Helper.mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
                     return this.res.status(201).send({ message });
                 } else {
                     const link = `http://${process.env.BASE_URL}/user/pdf/?passReq=true`
-                    const message = await passwordProviderLink(link, fileData.name, fileData.email, filePassword);
+                    const message = await Helper.passwordProviderLink(link, fileData.name, fileData.email, filePassword);
                     return this.res.status(201).send({ message });
                 }
             } else {
@@ -136,7 +135,7 @@ class UserController {
             const fileData = await this.service.getASingleUser(token as string);
             const match = await bcryptjs.compare(filePassword, fileData.filePassword)
             if (match) {
-                const message = await mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
+                const message = await Helper.mailToSendPdfLink(fileData.file, fileData.name, fileData.email);
                 return this.res.status(201).send({ message });
             } else {
                 return this.res.status(200).send({ message: "Passwsord Do not Match !!!" })
